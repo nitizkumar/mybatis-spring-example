@@ -2,8 +2,8 @@ package com.learnithardway.mybatis;
 
 import com.learnithardway.mybatis.model.Department;
 import com.learnithardway.mybatis.model.Employee;
-import com.learnithardway.mybatis.repo.DepartmentRepository;
-import com.learnithardway.mybatis.repo.EmployeeRepository;
+import com.learnithardway.mybatis.repo.DepartmentMapper;
+import com.learnithardway.mybatis.repo.EmployeeMapper;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,13 +22,13 @@ import java.util.List;
 class MybatisExampleApplicationTest {
 
 	@Autowired
-	EmployeeRepository employeeRepository;
+	EmployeeMapper employeeMapper;
 
 	@Autowired
 	SqlSessionFactory sqlSessionFactory;
 
 	@Autowired
-	DepartmentRepository departmentRepository;
+	DepartmentMapper departmentMapper;
 
 	@BeforeEach
 	public void setupDatabase() {
@@ -50,7 +50,7 @@ class MybatisExampleApplicationTest {
 
 	@Test
 	public void testGetEmployee() {
-		Employee employee = employeeRepository.getEmployee(101);
+		Employee employee = employeeMapper.selectEmployee(101);
 		Assertions.assertEquals("ABCD", employee.getName(), "Employee name should match");
 	}
 
@@ -58,13 +58,28 @@ class MybatisExampleApplicationTest {
 	public void testCreatemployee() {
 		Employee employee1 = new Employee();
 		employee1.setName("test");
-		Integer employee = employeeRepository.createEmployee(employee1);
+		Integer employee = employeeMapper.createEmployee(employee1);
 		Assertions.assertEquals(1, employee, "Employee id should be 1");
 	}
 
 	@Test
+	public void testFindEmployee() {
+		Employee employee1 = new Employee();
+		employee1.setName("ABCD");
+		Employee employee = employeeMapper.findEmployee(employee1);
+		Assertions.assertEquals(101, employee.getId(), "Employee id should be 1");
+
+		employee1.setName(null);
+		employee1.setId(101);
+		employee = employeeMapper.findEmployee(employee1);
+		Assertions.assertEquals("ABCD", employee.getName(), "Employee id should be 1");
+	}
+
+	@Test
 	public void testNPlusOneQueryRelation() {
-		Department department = departmentRepository.getDepartment(1);
+		Department department = departmentMapper.selectDepartment(1);
 		Assertions.assertEquals(4, department.getEmployeeList().size());
 	}
+
+
 }
