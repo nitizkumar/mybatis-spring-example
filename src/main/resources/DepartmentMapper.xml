@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="DepartmentMapper">
+<mapper namespace="com.learnithardway.mybatis.repo.DepartmentMapper">
 
     <select id="selectDepartment" resultMap="departmentMap">
         select d.id as dept_id,d.name as dept_name,e.name as e_name, e.id as e_id
