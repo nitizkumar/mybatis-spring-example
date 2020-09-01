@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DepartmentMapper">
+
+    <select id="selectDepartment" resultMap="departmentMap">
+        select d.id as dept_id,d.name as dept_name,e.name as e_name, e.id as e_id
+        from Department d join Employee e on
+        e.dept_id = d.id where d.id = #{id}
+    </select>
+
+    <resultMap id="departmentMap" type="com.learnithardway.mybatis.model.Department">
+        <result property="id" column="dept_id"/>
+        <result property="name" column="dept_name"/>
+        <collection property="employeeList" javaType="ArrayList" column="dept_id"
+                    ofType="com.learnithardway.mybatis.model.Employee">
+            <result property="id" column="e_id"/>
+            <result property="name" column="e_name"/>
+        </collection>
+    </resultMap>
+
+
+</mapper>
