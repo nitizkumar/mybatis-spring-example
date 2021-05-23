@@ -10,13 +10,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 
+import javax.annotation.Resource;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 class MybatisExampleApplicationTest {
@@ -63,7 +68,7 @@ class MybatisExampleApplicationTest {
 	}
 
 	@Test
-	public void testFindEmployee() {
+	public void testCrudEmployee() {
 		Employee employee1 = new Employee();
 		employee1.setName("ABCD");
 		Employee employee = employeeMapper.findEmployee(employee1);
@@ -73,6 +78,28 @@ class MybatisExampleApplicationTest {
 		employee1.setId(101);
 		employee = employeeMapper.findEmployee(employee1);
 		Assertions.assertEquals("ABCD", employee.getName(), "Employee id should be 1");
+		List<Employee> employees = employeeMapper.findAll();
+		Assertions.assertEquals(4, employees.size());
+		Employee employee2 = new Employee();
+		employee2.setName("test new");
+		employeeMapper.createEmployee(employee2);
+		Employee retrieved = employeeMapper.findEmployee(employee2);
+		assertNotNull(retrieved);
+		// auto_increment column has worked
+		assertNotNull(retrieved.getId());
+		employees = employeeMapper.findAll();
+		Assertions.assertEquals(5, employees.size());
+
+		// delete the new one
+		Employee employeeToDelete = new Employee();
+		employeeToDelete.setName("test new");
+
+		employeeMapper.deleteEmployee(employeeToDelete);
+		// now the one 2 delete should be gone
+		assertNull(employeeMapper.findEmployee(employee2));
+		employees = employeeMapper.findAll();
+		Assertions.assertEquals(4, employees.size());
+
 	}
 
 	@Test

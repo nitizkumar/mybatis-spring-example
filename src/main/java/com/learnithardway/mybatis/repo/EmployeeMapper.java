@@ -5,6 +5,8 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 public interface EmployeeMapper {
 
@@ -15,4 +17,9 @@ public interface EmployeeMapper {
 	public Integer createEmployee(Employee employee);
 
 	public Employee findEmployee(Employee employee);
+
+	public void deleteEmployee(Employee employee);
+
+	@Select("select * from Employee")
+	List<Employee> findAll();
 }
