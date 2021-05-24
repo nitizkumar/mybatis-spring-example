@@ -7,7 +7,7 @@
     <select id="findEmployee" resultType="com.learnithardway.mybatis.model.Employee">
         select id,name from Employee where
         <choose>
-            <when test="name!=null">
+            <when test="name!=null and name !='' ">
                 name like #{name}
             </when>
             <when test="id != null">

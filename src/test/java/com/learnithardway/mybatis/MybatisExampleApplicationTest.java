@@ -5,14 +5,11 @@ import com.learnithardway.mybatis.model.Employee;
 import com.learnithardway.mybatis.repo.DepartmentMapper;
 import com.learnithardway.mybatis.repo.EmployeeMapper;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ClassPathResource;
 
-import javax.annotation.Resource;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -62,30 +59,40 @@ class MybatisExampleApplicationTest {
 	public void testCreatemployee() {
 		Employee employee1 = new Employee();
 		employee1.setName("test");
-		Integer employee = employeeMapper.createEmployee(employee1);
-		assertEquals(1, employee, "Employee id should be 1");
+		Integer updatedRows = employeeMapper.createEmployee(employee1);
+		assertNotNull(employee1.getId());
+		assertEquals(1, updatedRows, "number of updated rows should be 1");
 	}
 
 	@Test
-	public void testCrudEmployee() {
+	public void testFindEmployee() {
 		Employee employee1 = new Employee();
 		employee1.setName("ABCD");
 		Employee employee = employeeMapper.findEmployee(employee1);
-		assertEquals(101, employee.getId(), "Employee id should be 1");
+		assertEquals(101, employee.getId(), "Employee id should be 101");
 
 		employee1.setName(null);
 		employee1.setId(101);
 		employee = employeeMapper.findEmployee(employee1);
-		assertEquals("ABCD", employee.getName(), "Employee id should be 1");
+		assertEquals("ABCD", employee.getName(), "Employee name should be ABCD");
 		List<Employee> employees = employeeMapper.findAll();
 		assertEquals(4, employees.size());
 		Employee employee2 = new Employee();
 		employee2.setName("test new");
 		employeeMapper.createEmployee(employee2);
-		assertNotNull(employee2.getId());
-		// find checks id and
+
+		// find checks id and name
 		Employee retrieved = employeeMapper.findEmployee(employee2);
 		assertNotNull(retrieved);
+		// find by id by setting the name to null
+		employee2.setName(null);
+		 retrieved = employeeMapper.findEmployee(employee2);
+		assertNotNull(retrieved);
+		// find by id by setting the name to empty
+		employee2.setName("");
+		 retrieved = employeeMapper.findEmployee(employee2);
+		assertNotNull(retrieved);
+
 		// auto_increment column has worked
 		assertNotNull(retrieved.getId());
 		employees = employeeMapper.findAll();
