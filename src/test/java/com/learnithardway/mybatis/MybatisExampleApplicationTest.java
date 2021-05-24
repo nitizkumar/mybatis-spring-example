@@ -71,8 +71,16 @@ class MybatisExampleApplicationTest {
 		Employee employee = employeeMapper.findEmployee(employee1);
 		assertEquals(101, employee.getId(), "Employee id should be 101");
 
+		// when name is null
 		employee1.setName(null);
 		employee1.setId(101);
+		// then the id should be used
+		employee = employeeMapper.findEmployee(employee1);
+		assertEquals("ABCD", employee.getName(), "Employee name should be ABCD");
+		// when name is empty
+		employee1.setName("");
+		employee1.setId(101);
+		// then the id should be used
 		employee = employeeMapper.findEmployee(employee1);
 		assertEquals("ABCD", employee.getName(), "Employee name should be ABCD");
 		List<Employee> employees = employeeMapper.findAll();
