@@ -13,7 +13,6 @@ public interface EmployeeMapper {
 	@Select("select id,name from Employee where id = #{id}")
 	public Employee selectEmployee(Integer id);
 
-	@Insert(" insert into Employee (id,name) values ( #{id}, #{name} )")
 	public Integer createEmployee(Employee employee);
 
 	public Employee findEmployee(Employee employee);

@@ -20,8 +20,7 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class MybatisExampleApplicationTest {
@@ -56,7 +55,7 @@ class MybatisExampleApplicationTest {
 	@Test
 	public void testGetEmployee() {
 		Employee employee = employeeMapper.selectEmployee(101);
-		Assertions.assertEquals("ABCD", employee.getName(), "Employee name should match");
+		assertEquals("ABCD", employee.getName(), "Employee name should match");
 	}
 
 	@Test
@@ -64,7 +63,7 @@ class MybatisExampleApplicationTest {
 		Employee employee1 = new Employee();
 		employee1.setName("test");
 		Integer employee = employeeMapper.createEmployee(employee1);
-		Assertions.assertEquals(1, employee, "Employee id should be 1");
+		assertEquals(1, employee, "Employee id should be 1");
 	}
 
 	@Test
@@ -72,23 +71,25 @@ class MybatisExampleApplicationTest {
 		Employee employee1 = new Employee();
 		employee1.setName("ABCD");
 		Employee employee = employeeMapper.findEmployee(employee1);
-		Assertions.assertEquals(101, employee.getId(), "Employee id should be 1");
+		assertEquals(101, employee.getId(), "Employee id should be 1");
 
 		employee1.setName(null);
 		employee1.setId(101);
 		employee = employeeMapper.findEmployee(employee1);
-		Assertions.assertEquals("ABCD", employee.getName(), "Employee id should be 1");
+		assertEquals("ABCD", employee.getName(), "Employee id should be 1");
 		List<Employee> employees = employeeMapper.findAll();
-		Assertions.assertEquals(4, employees.size());
+		assertEquals(4, employees.size());
 		Employee employee2 = new Employee();
 		employee2.setName("test new");
 		employeeMapper.createEmployee(employee2);
+		assertNotNull(employee2.getId());
+		// find checks id and
 		Employee retrieved = employeeMapper.findEmployee(employee2);
 		assertNotNull(retrieved);
 		// auto_increment column has worked
 		assertNotNull(retrieved.getId());
 		employees = employeeMapper.findAll();
-		Assertions.assertEquals(5, employees.size());
+		assertEquals(5, employees.size());
 
 		// delete the new one
 		Employee employeeToDelete = new Employee();
@@ -98,14 +99,14 @@ class MybatisExampleApplicationTest {
 		// now the one 2 delete should be gone
 		assertNull(employeeMapper.findEmployee(employee2));
 		employees = employeeMapper.findAll();
-		Assertions.assertEquals(4, employees.size());
+		assertEquals(4, employees.size());
 
 	}
 
 	@Test
 	public void testNPlusOneQueryRelation() {
 		Department department = departmentMapper.selectDepartment(1);
-		Assertions.assertEquals(4, department.getEmployeeList().size());
+		assertEquals(4, department.getEmployeeList().size());
 	}
 
 
