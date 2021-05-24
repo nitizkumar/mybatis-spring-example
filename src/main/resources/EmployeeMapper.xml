@@ -6,12 +6,28 @@
 
     <select id="findEmployee" resultType="com.learnithardway.mybatis.model.Employee">
         select id,name from Employee where
-        <if test="name != null">
-            name like #{name}
-        </if>
-        <if test="id != null">
-            id = #{id}
-        </if>
+        <choose>
+            <when test="name!=null and name !='' ">
+                name like #{name}
+            </when>
+            <when test="id != null">
+                id = #{id}
+            </when>
+        </choose>
     </select>
-
+    <delete id="deleteEmployee">
+        delete from Employee where
+        <choose>
+            <when test="name!=null">
+                name like #{name}
+            </when>
+            <when test="id != null">
+                id = #{id}
+            </when>
+        </choose>
+    </delete>
+    <insert id="createEmployee" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into Employee (id, name)
+        values (#{id}, #{name})
+    </insert>
 </mapper>
